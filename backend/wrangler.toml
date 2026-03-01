@@ -1,9 +1,9 @@
 name = "kebab-rating-backend"
 main = "src/index.ts"
-compatibility_date = "2024-03-20"
+compatibility_date = "2024-09-23"
 compatibility_flags = ["nodejs_compat"]
 
 [vars]
-FRONTEND_URL = "http://localhost:5173"
-AUTH_MICROSERVICE_URL = "http://127.0.0.1:8787/verify"
-MONGO_URI = "mongodb://127.0.0.1:27017/kebab-rating"
+FRONTEND_URL = "https://kebab-rating.pages.dev"
+# Odkaz na tvůj nasazený auth worker
+AUTH_MICROSERVICE_URL = "https://auth.v-vizvary.workers.dev/verify"

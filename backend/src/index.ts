@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import app from './api/server';
 import mongo from './database/mongo';
 
