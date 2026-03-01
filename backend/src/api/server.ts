@@ -5,10 +5,13 @@ import { placeRoutes } from './controllers/place/place.controller';
 
 const app = new Hono();
 
-app.use('*', cors({
-    origin: 'http://localhost:5173',
-    credentials: true,
-}));
+app.use('*', async (c, next) => {
+    const frontendUrl = (c.env as any)?.FRONTEND_URL || process.env.FRONTEND_URL || 'http://localhost:5173';
+    return cors({
+        origin: frontendUrl,
+        credentials: true,
+    })(c, next);
+});
 
 app.get('/', (c) => {
     return c.json({ 

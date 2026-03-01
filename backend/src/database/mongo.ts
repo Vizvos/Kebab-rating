@@ -8,8 +8,11 @@ class MongoDatabase {
         this.client = new MongoClient(Config.mongoUri);
     }
 
-    async connect() {
+    async connect(uriOverride?: string) {
         try {
+            if (uriOverride) {
+                this.client = new MongoClient(uriOverride);
+            }
             console.log("Connecting to MongoDB...");
             await this.client.connect();
             console.log("Successfully connected to MongoDB Workspace!");

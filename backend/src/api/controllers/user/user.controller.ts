@@ -15,7 +15,7 @@ app.post('/register', validateDto(CreateUserDto), async (c) => {
         return c.json({ message: 'Missing Authorization header' }, 401);
     }
     
-    const AUTH_MICROSERVICE_URL = process.env.AUTH_MICROSERVICE_URL || 'http://127.0.0.1:8787/verify';
+    const AUTH_MICROSERVICE_URL = (c.env as any)?.AUTH_MICROSERVICE_URL || process.env.AUTH_MICROSERVICE_URL || 'http://127.0.0.1:8787/verify';
     
     try {
         const response = await fetch(AUTH_MICROSERVICE_URL, {

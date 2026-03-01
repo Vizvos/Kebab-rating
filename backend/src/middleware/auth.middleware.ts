@@ -11,8 +11,7 @@ export const requireAuth = async (c: Context, next: Next) => {
     }
 
     // V zkušebním nebo local dev prostředí se dá toto částečně vypnout (podle env variable), ale pro produkci:
-    // Nyní backend nepoužívá firebase-admin přímo, ale volá Auth Microservice (běží např. na localhost:8787 z wrangleru)
-    const AUTH_MICROSERVICE_URL = process.env.AUTH_MICROSERVICE_URL || 'http://127.0.0.1:8787/verify';
+    const AUTH_MICROSERVICE_URL = (c.env as any)?.AUTH_MICROSERVICE_URL || process.env.AUTH_MICROSERVICE_URL || 'http://127.0.0.1:8787/verify';
 
     try {
         const response = await fetch(AUTH_MICROSERVICE_URL, {
