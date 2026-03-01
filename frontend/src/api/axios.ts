@@ -11,8 +11,13 @@ api.interceptors.request.use(async (config) => {
   const user = auth.currentUser;
   
   if (user) {
-    const token = await user.getIdToken();
-    config.headers.Authorization = `Bearer ${token}`;
+    try {
+      // Force refresh zajistí, že neposíláme starý token, který backend / auth service odmítne
+      const token = await user.getIdToken(true);
+      config.headers.Authorization = `Bearer ${token}`;
+    } catch (e) {
+      console.error("Error getting auth token:", e);
+    }
   }
   
   return config;

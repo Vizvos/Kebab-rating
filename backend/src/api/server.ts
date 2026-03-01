@@ -12,11 +12,16 @@ type Bindings = {
 const app = new Hono<{ Bindings: Bindings }>();
 
 app.use('*', async (c, next) => {
-    const frontendUrl = c.env?.FRONTEND_URL || process.env.FRONTEND_URL || 'https://kebab-rating.pages.dev';
-    return cors({
+    const frontendUrl = c.env?.FRONTEND_URL || 'https://kebab-rating.pages.dev';
+    const corsMiddleware = cors({
         origin: frontendUrl,
+        allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+        allowHeaders: ['Content-Type', 'Authorization'],
+        exposeHeaders: ['Content-Length'],
+        maxAge: 600,
         credentials: true,
-    })(c, next);
+    });
+    return corsMiddleware(c, next);
 });
 
 // Testovací endpoint
