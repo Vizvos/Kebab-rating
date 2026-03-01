@@ -8,7 +8,7 @@ const port = Number(Config.port) || 3000;
 
 async function init() {
     // 1. First initialize the db connection
-    await mongo.connect();
+    await mongo.connect(Config.mongoUri);
 
     // 2. Start the Hono server using Node.js adapter
     serve({
