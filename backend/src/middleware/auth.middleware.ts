@@ -11,7 +11,12 @@ export const requireAuth = async (c: Context, next: Next) => {
     }
 
     // V zkušebním nebo local dev prostředí se dá toto částečně vypnout (podle env variable), ale pro produkci:
-    const AUTH_SERVICE_URL = (c.env as any)?.AUTH_SERVICE_URL || process.env.AUTH_SERVICE_URL || 'https://auth.v-vizvary.workers.dev';
+    const AUTH_SERVICE_URL = (c.env as any)?.AUTH_SERVICE_URL || process.env.AUTH_SERVICE_URL;
+    
+    if (!AUTH_SERVICE_URL) {
+        console.error("AUTH_SERVICE_URL is missing in environment!");
+        return c.json({ message: 'Internal Server Error: Auth configuration missing' }, 500);
+    }
 
     try {
         const response = await fetch(`${AUTH_SERVICE_URL}/verify`, {

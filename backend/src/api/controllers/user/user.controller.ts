@@ -15,7 +15,11 @@ app.post('/register', validateDto(CreateUserDto), async (c) => {
         return c.json({ message: 'Missing Authorization header' }, 401);
     }
     
-    const AUTH_SERVICE_URL = (c.env as any)?.AUTH_SERVICE_URL || process.env.AUTH_SERVICE_URL || 'https://auth.v-vizvary.workers.dev';
+    const AUTH_SERVICE_URL = (c.env as any)?.AUTH_SERVICE_URL || process.env.AUTH_SERVICE_URL;
+
+    if (!AUTH_SERVICE_URL) {
+        return c.json({ message: 'Auth service configuration missing' }, 500);
+    }
     
     try {
         const response = await fetch(`${AUTH_SERVICE_URL}/verify`, {
