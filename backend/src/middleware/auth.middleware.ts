@@ -29,7 +29,11 @@ export const requireAuth = async (c: Context, next: Next) => {
         if (!response.ok) {
             const errorText = await response.text();
             console.error("Auth microservice error:", errorText);
-            return c.json({ message: 'Invalid or expired Authorization token' }, 401);
+            return c.json({ 
+                message: 'Autentizace selhala', 
+                detail: errorText, 
+                code: 'AUTH_VERIFY_FAILED' 
+            }, 401);
         }
 
         const data = await response.json() as { valid: boolean, uid: string, email: string };

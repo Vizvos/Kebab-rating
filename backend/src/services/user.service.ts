@@ -11,8 +11,8 @@ export class UserService {
         }
 
         const newUser = {
-            firebaseUid: firebaseUid,
-            name: dto.name,
+            firebaseUid: String(firebaseUid), // Striktní string
+            name: String(dto.name),           // Striktní string
             ratings: [],
             createdPlaces: [],
             isAdmin: false,

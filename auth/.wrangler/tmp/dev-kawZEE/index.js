@@ -4529,7 +4529,7 @@ app.post("/verify", async (c) => {
     return c.json({ error: "Missing or invalid Authorization header" }, 401);
   }
   const token = authHeader.split(" ")[1];
-  const projectId = c.env.FIREBASE_PROJECT_ID || "kebabrating";
+  const projectId = c.env.FIREBASE_PROJECT_ID || "kebab-rating";
   console.log(`Verifying token for project: ${projectId}`);
   try {
     const { payload } = await jwtVerify(token, JWKS, {

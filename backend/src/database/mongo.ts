@@ -9,21 +9,28 @@ class MongoDatabase {
     constructor() {}
 
     async connect(uri: string) {
-        // Pokud už jsme připojeni, nic neděláme
         if (this._db) return;
 
-        // Pokud se právě připojujeme, počkáme na stávající proces
         if (this.connectionPromise) {
             return this.connectionPromise;
         }
 
-        // Jinak zahájíme nové připojení
         this.connectionPromise = (async () => {
             try {
-                this.client = new MongoClient(uri);
+                // Konfigurace pro Cloudflare Workers v roce 2026:
+                // Menší timeouty zajistí, že se Worker nezasekne, pokud Atlas neodpovídá.
+                this.client = new MongoClient(uri, {
+                    serverSelectionTimeoutMS: 5000,
+                    connectTimeoutMS: 5000,
+                    socketTimeoutMS: 30000,
+                    maxPoolSize: 1 // Na Workeru chceme malý pool
+                });
+
                 await this.client.connect();
                 this._db = this.client.db();
+                console.log("Connected to MongoDB via Native TCP!");
             } catch (error) {
+                console.error("MongoDB Connection Failed:", error);
                 this.client = null;
                 this._db = null;
                 this.connectionPromise = null;
@@ -36,7 +43,7 @@ class MongoDatabase {
 
     get db() {
         if (!this._db) {
-            throw new Error("Database not connected. Connection must be established first.");
+            throw new Error("DB_NOT_CONNECTED");
         }
         return this._db;
     }
