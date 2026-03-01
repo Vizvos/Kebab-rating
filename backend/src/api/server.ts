@@ -6,7 +6,7 @@ import { placeRoutes } from './controllers/place/place.controller';
 const app = new Hono();
 
 app.use('*', async (c, next) => {
-    const frontendUrl = (c.env as any)?.FRONTEND_URL || process.env.FRONTEND_URL || 'http://localhost:5173';
+    const frontendUrl = (c.env as any)?.FRONTEND_URL || process.env.FRONTEND_URL || 'https://kebab-rating.pages.dev';
     return cors({
         origin: frontendUrl,
         credentials: true,

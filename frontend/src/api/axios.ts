@@ -3,7 +3,7 @@ import { auth } from '../firebase';
 
 // Vytvoříme instanci Axiosu pro naše Backend API
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3000', // Port tvého Backend API
+  baseURL: import.meta.env.VITE_API_URL || 'https://kebab-rating-backend.v-vizvary.workers.dev', // Backend API
 });
 
 // Každý request, který odchází do backendu, dostane svůj JWT token

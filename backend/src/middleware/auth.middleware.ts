@@ -11,7 +11,7 @@ export const requireAuth = async (c: Context, next: Next) => {
     }
 
     // V zkušebním nebo local dev prostředí se dá toto částečně vypnout (podle env variable), ale pro produkci:
-    const AUTH_MICROSERVICE_URL = (c.env as any)?.AUTH_MICROSERVICE_URL || process.env.AUTH_MICROSERVICE_URL || 'http://127.0.0.1:8787/verify';
+    const AUTH_MICROSERVICE_URL = (c.env as any)?.AUTH_MICROSERVICE_URL || process.env.AUTH_MICROSERVICE_URL || 'https://auth.v-vizvary.workers.dev/verify';
 
     try {
         const response = await fetch(AUTH_MICROSERVICE_URL, {
