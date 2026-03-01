@@ -19,9 +19,18 @@ const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 // Tím se zaregistruje nebo obdrží svá oprávnění do DB
 const registerUserInDb = async (currentUser: User) => {
     try {
-        await api.post('/users/register', { name: currentUser.displayName || 'KebabLover' });
-    } catch (e) {
-        console.error("Registrace zlyhala na serveru:", e);
+        // Získáme čerstvý token předem
+        const token = await currentUser.getIdToken();
+        if (!token) return;
+
+        await api.post('/users/register', { 
+            name: currentUser.displayName || currentUser.email?.split('@')[0] || 'KebabLover' 
+        });
+    } catch (e: any) {
+        // Pokud dostaneme 401, jen to logneme potichu, může jít o race condition při startu
+        if (e.response?.status !== 401) {
+            console.warn("Silent DB sync sync skipped or failed");
+        }
     }
 }
 

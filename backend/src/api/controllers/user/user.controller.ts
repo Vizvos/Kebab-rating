@@ -31,8 +31,12 @@ app.post('/register', validateDto(CreateUserDto), async (c) => {
 
         if (!response.ok) {
             const errorText = await response.text();
-            console.error("Auth microservice registration error:", errorText);
-            return c.json({ message: 'Invalid token or error from auth service' }, 401);
+            console.error("Auth server registration error detail:", errorText);
+            return c.json({ 
+                message: 'Auth verification failed', 
+                authError: errorText,
+                status: response.status 
+            }, 401);
         }
 
         const data = await response.json() as { valid: boolean, uid: string };

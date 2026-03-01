@@ -8,16 +8,17 @@ class MongoDatabase {
     constructor() {}
 
     async connect(uri: string) {
-        if (this.client && this._db) return; // Už jsme připojeni
+        if (this._db) return;
         
         try {
-            console.log("Connecting to MongoDB Atlas...");
-            this.client = new MongoClient(uri);
-            await this.client.connect();
-            this._db = this.client.db();
-            console.log("Successfully connected to MongoDB Atlas!");
+            if (!this.client) {
+                this.client = new MongoClient(uri);
+                await this.client.connect();
+                this._db = this.client.db();
+            }
         } catch (error) {
-            console.error("MongoDB Atlas connection error:", error);
+            this.client = null;
+            this._db = null;
             throw error;
         }
     }
