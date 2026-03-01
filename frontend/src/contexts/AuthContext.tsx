@@ -15,24 +15,6 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 
-// Pokaždé když se uživatel přihlásí, na backendu se automaticky spustí /users/register
-// Tím se zaregistruje nebo obdrží svá oprávnění do DB
-const registerUserInDb = async (currentUser: User) => {
-    try {
-        // Získáme čerstvý token předem
-        const token = await currentUser.getIdToken();
-        if (!token) return;
-
-        await api.post('/users/register', { 
-            name: currentUser.displayName || currentUser.email?.split('@')[0] || 'KebabLover' 
-        });
-    } catch (e: any) {
-        // Pokud dostaneme 401, jen to logneme potichu, může jít o race condition při startu
-        if (e.response?.status !== 401) {
-            console.warn("Silent DB sync sync skipped or failed");
-        }
-    }
-}
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
@@ -41,10 +23,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
-      // Ihned vytvořit nebo syncnout profil v DB na Backendu
-      if (currentUser) {
-          await registerUserInDb(currentUser);
-      }
       setLoading(false);
     });
     return () => unsubscribe();
