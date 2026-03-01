@@ -2,27 +2,31 @@ import { MongoClient } from 'mongodb';
 import { Config } from '../../config';
 
 class MongoDatabase {
-    private client: MongoClient;
+    private client: MongoClient | null = null;
 
-    constructor() {
-        this.client = new MongoClient(Config.mongoUri);
-    }
+    constructor() {}
 
     async connect(uriOverride?: string) {
+        const uri = uriOverride || Config.mongoUri;
+        if (!uri) {
+            throw new Error("MongoDB URI is required but was not provided.");
+        }
         try {
-            if (uriOverride) {
-                this.client = new MongoClient(uriOverride);
-            }
+            this.client = new MongoClient(uri);
             console.log("Connecting to MongoDB...");
             await this.client.connect();
-            console.log("Successfully connected to MongoDB Workspace!");
+            console.log("Successfully connected to MongoDB!");
         } catch (error) {
             console.error("MongoDB connection error:", error);
-            process.exit(1);
+            // V produkci nechceme exit(1) na Workeru, pokud to lze řešit jinak, ale prozatím ponecháme logiku
+            throw error;
         }
     }
 
     get db() {
+        if (!this.client) {
+            throw new Error("Database not connected. Call connect() first.");
+        }
         return this.client.db();
     }
 }

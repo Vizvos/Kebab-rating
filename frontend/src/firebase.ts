@@ -12,9 +12,6 @@ const firebaseConfig = {
   appId: "1:679455164281:web:a9417d284291f257f511a8"
 };
 
-// Initialize Firebase
-console.log("FIREBASE CONFIG BEING PASSED TO SDK:", firebaseConfig);
-console.log("IS API KEY EXACTLY AS HARDCODED?", firebaseConfig.apiKey === "AIzaSyCfG4MCg5j9ohj_RAwcAVY4JZCRWId9y_O");
 
 const app = initializeApp(firebaseConfig);
 

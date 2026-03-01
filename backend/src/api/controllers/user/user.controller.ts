@@ -15,10 +15,10 @@ app.post('/register', validateDto(CreateUserDto), async (c) => {
         return c.json({ message: 'Missing Authorization header' }, 401);
     }
     
-    const AUTH_MICROSERVICE_URL = (c.env as any)?.AUTH_MICROSERVICE_URL || process.env.AUTH_MICROSERVICE_URL || 'https://auth.v-vizvary.workers.dev/verify';
+    const AUTH_SERVICE_URL = (c.env as any)?.AUTH_SERVICE_URL || process.env.AUTH_SERVICE_URL || 'https://auth.v-vizvary.workers.dev';
     
     try {
-        const response = await fetch(AUTH_MICROSERVICE_URL, {
+        const response = await fetch(`${AUTH_SERVICE_URL}/verify`, {
             method: 'POST',
             headers: {
                 'Authorization': authHeader
@@ -37,8 +37,8 @@ app.post('/register', validateDto(CreateUserDto), async (c) => {
         const user = await userService.createUser(firebaseUid, dto);
         return c.json({ message: 'User signed in / registered successfully', user }, 201);
     } catch (error) {
-        console.error("Auth microservice connection error:", error);
-        return c.json({ message: 'Could not connect to auth microservice or error creating user', error }, 500);
+        console.error("Auth service connection error:", error);
+        return c.json({ message: 'Could not connect to auth service or error creating user', error }, 500);
     }
 });
 

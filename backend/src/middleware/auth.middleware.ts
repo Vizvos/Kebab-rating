@@ -11,10 +11,10 @@ export const requireAuth = async (c: Context, next: Next) => {
     }
 
     // V zkušebním nebo local dev prostředí se dá toto částečně vypnout (podle env variable), ale pro produkci:
-    const AUTH_MICROSERVICE_URL = (c.env as any)?.AUTH_MICROSERVICE_URL || process.env.AUTH_MICROSERVICE_URL || 'https://auth.v-vizvary.workers.dev/verify';
+    const AUTH_SERVICE_URL = (c.env as any)?.AUTH_SERVICE_URL || process.env.AUTH_SERVICE_URL || 'https://auth.v-vizvary.workers.dev';
 
     try {
-        const response = await fetch(AUTH_MICROSERVICE_URL, {
+        const response = await fetch(`${AUTH_SERVICE_URL}/verify`, {
             method: 'POST',
             headers: {
                 'Authorization': authHeader
@@ -42,7 +42,7 @@ export const requireAuth = async (c: Context, next: Next) => {
         
         await next();
     } catch (error) {
-        console.error("Auth Microservice Connection Error:", error);
-        return c.json({ message: 'Could not connect to auth microservice' }, 500);
+        console.error("Auth Service Connection Error:", error);
+        return c.json({ message: 'Could not connect to auth service' }, 500);
     }
 };
