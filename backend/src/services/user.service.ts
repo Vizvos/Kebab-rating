@@ -1,34 +1,38 @@
-import { collections } from '../database/collections';
+/// <reference types="@cloudflare/workers-types" />
 import { CreateUserDto } from '../types/dto/user.dto';
-import { ObjectId } from 'mongodb';
 
 export class UserService {
-    async createUser(firebaseUid: string, dto: CreateUserDto) {
-        // Občas může firebaseUid už existovat při dalším přihlášení, ideálně jej updatneme nebo vrátíme existující
-        const existing = await collections.users.findOne({ firebaseUid });
-        if (existing) {
-            return existing;
+    async createUser(db: D1Database, firebaseUid: string, dto: CreateUserDto) {
+        // Kontrola, zda neexistuje
+        const existingInfo = await db.prepare("SELECT * FROM users WHERE firebase_uid = ?")
+            .bind(String(firebaseUid))
+            .first();
+
+        if (existingInfo) {
+            return existingInfo;
         }
 
-        const newUser = {
-            firebaseUid: String(firebaseUid), // Striktní string
-            name: String(dto.name),           // Striktní string
-            ratings: [],
-            createdPlaces: [],
-            isAdmin: false,
-            createdAt: new Date()
-        };
+        const newId = crypto.randomUUID();
+        const newName = String(dto.name);
+        const fUid = String(firebaseUid);
 
-        const result = await collections.users.insertOne(newUser);
-        return { ...newUser, _id: result.insertedId };
+        await db.prepare("INSERT INTO users (id, firebase_uid, name, is_admin) VALUES (?, ?, ?, 0)")
+            .bind(newId, fUid, newName)
+            .run();
+
+        return { id: newId, firebaseUid: fUid, name: newName, is_admin: 0 };
     }
 
-    async getUserByFirebaseUid(firebaseUid: string) {
-        return await collections.users.findOne({ firebaseUid });
+    async getUserByFirebaseUid(db: D1Database, firebaseUid: string) {
+         return await db.prepare("SELECT * FROM users WHERE firebase_uid = ?")
+            .bind(String(firebaseUid))
+            .first();
     }
 
-    async getUserById(id: string) {
-        return await collections.users.findOne({ _id: new ObjectId(id) });
+    async getUserById(db: D1Database, id: string) {
+        return await db.prepare("SELECT * FROM users WHERE id = ?")
+            .bind(String(id))
+            .first();
     }
 }
 

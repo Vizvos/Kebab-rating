@@ -33,9 +33,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const registerEmail = async (email: string, pass: string, name: string) => {
-    await createUserWithEmailAndPassword(auth, email, pass);
+    const cred = await createUserWithEmailAndPassword(auth, email, pass);
+    const token = await cred.user.getIdToken(true);
     // Nastavíme jméno v DB, Firebase updatovat nemusíme, backend bere to jméno
-    await api.post('/users/register', { name: name || 'KebabLover' });
+    await api.post('/users/register', { name: name || 'KebabLover' }, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
     // Přihlásí se automaticky
   };
 

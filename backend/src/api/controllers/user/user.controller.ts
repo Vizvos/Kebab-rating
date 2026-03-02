@@ -4,7 +4,7 @@ import { validateDto } from '../../../middleware/validator.middleware';
 import { CreateUserDto } from '../../../types/dto/user.dto';
 
 
-const app = new Hono<{ Variables: { validatedDto: any } }>();
+const app = new Hono<{ Bindings: { DB: D1Database, AUTH_SERVICE_URL: string }, Variables: { validatedDto: any } }>();
 
 app.post('/register', validateDto(CreateUserDto), async (c) => {
     const dto = c.get('validatedDto') as CreateUserDto;
@@ -42,7 +42,7 @@ app.post('/register', validateDto(CreateUserDto), async (c) => {
         const data = await response.json() as { valid: boolean, uid: string };
         const firebaseUid = data.uid;
         
-        const user = await userService.createUser(firebaseUid, dto);
+        const user = await userService.createUser(c.env.DB, firebaseUid, dto);
         return c.json({ message: 'User signed in / registered successfully', user }, 201);
     } catch (error) {
         console.error("Auth service connection error:", error);
@@ -53,7 +53,7 @@ app.post('/register', validateDto(CreateUserDto), async (c) => {
 app.get('/:uid', async (c) => {
     const uid = c.req.param('uid');
     try {
-        const user = await userService.getUserByFirebaseUid(uid);
+        const user = await userService.getUserByFirebaseUid(c.env.DB, uid);
         if (!user) {
             return c.json({ message: 'User not found' }, 404);
         }

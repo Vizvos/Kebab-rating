@@ -4,8 +4,8 @@
   "description": "",
   "main": "src/index.ts",
   "scripts": {
-    "dev": "tsx watch src/app.ts",
-    "start": "tsx src/app.ts",
+    "dev": "wrangler dev",
+    "start": "wrangler dev",
     "deploy": "wrangler deploy"
   },
   "keywords": [],

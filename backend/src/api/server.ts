@@ -1,3 +1,4 @@
+/// <reference types="@cloudflare/workers-types" />
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { userRoutes } from './controllers/user/user.controller';
@@ -6,7 +7,7 @@ import { placeRoutes } from './controllers/place/place.controller';
 type Bindings = {
     FRONTEND_URL: string;
     AUTH_SERVICE_URL: string;
-    MONGO_URI: string;
+    DB: D1Database;
 };
 
 const app = new Hono<{ Bindings: Bindings }>();

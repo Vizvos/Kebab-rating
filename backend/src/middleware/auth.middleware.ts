@@ -40,12 +40,12 @@ export const requireAuth = async (c: Context, next: Next) => {
         const firebaseUid = data.uid; 
         
         // Zkusíme najít usera v databázi
-        let user = await userService.getUserByFirebaseUid(firebaseUid);
+        let user: any = await userService.getUserByFirebaseUid((c.env as any).DB, firebaseUid);
         
         // --- OPRAVA: Pokud uživatel neexistuje, vytvoříme ho na letu ---
         if (!user) {
             console.log(`User ${firebaseUid} not found in DB, auto-creating...`);
-            user = await userService.createUser(firebaseUid, { 
+            user = await userService.createUser((c.env as any).DB, firebaseUid, { 
                 name: data.email?.split('@')[0] || 'KebabLover' 
             });
         }

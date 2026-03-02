@@ -6,8 +6,8 @@ import { getAuth } from "firebase/auth";
 const firebaseConfig = {
     apiKey: "AIzaSyCfG4MCg5j9ohj_RAwcAVY4JZCRWId9y_0",
   authDomain: "kebabrating.firebaseapp.com",
-  projectId: "kebab-rating",
-  storageBucket: "kebab-rating.firebasestorage.app",
+  projectId: "kebabrating",
+  storageBucket: "kebabrating.firebasestorage.app",
   messagingSenderId: "679455164281",
   appId: "1:679455164281:web:a9417d284291f257f511a8"
 };

@@ -21,7 +21,7 @@ app.post('/verify', async (c) => {
     }
 
     const token = authHeader.split(' ')[1];
-    const projectId = c.env.FIREBASE_PROJECT_ID || 'kebab-rating'; 
+    const projectId = c.env.FIREBASE_PROJECT_ID || 'kebabrating'; 
 
     console.log(`Verifying token for project: ${projectId}`);
     

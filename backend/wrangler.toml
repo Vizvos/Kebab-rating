@@ -7,3 +7,8 @@ compatibility_flags = ["nodejs_compat"]
 FRONTEND_URL = "https://kebab-rating.pages.dev"
 # Odkaz na tvůj nasazený auth worker service
 AUTH_SERVICE_URL = "https://auth.v-vizvary.workers.dev"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "kebab-rating-db"
+database_id = "caef9281-8598-49ea-9a63-32b8f3efb857"

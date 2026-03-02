@@ -1,64 +1,36 @@
-import { collections } from '../database/collections';
+/// <reference types="@cloudflare/workers-types" />
 import { CreateRatingDto } from '../types/dto/rating.dto';
-import { ObjectId } from 'mongodb';
 import { placeService } from './place.service';
 
 export class RatingService {
-    async createRating(userId: string, placeId: string, dto: CreateRatingDto) {
-        const userObjId = new ObjectId(userId);
-        const placeObjId = new ObjectId(placeId);
+    async createRating(db: D1Database, userId: string, placeId: string, dto: CreateRatingDto) {
+        const newId = crypto.randomUUID();
 
-        const newRating = {
-            foodName: dto.foodName,
-            score: dto.score,
-            description: dto.description,
-            placeId: placeObjId,
-            userId: userObjId,
-            createdAt: new Date()
-        };
+        await db.prepare(`
+            INSERT INTO ratings (id, place_id, user_id, food_name, score, description)
+            VALUES (?, ?, ?, ?, ?, ?)
+        `)
+        .bind(newId, String(placeId), String(userId), dto.foodName ? String(dto.foodName) : null, Number(dto.score), dto.description ? String(dto.description) : null)
+        .run();
 
-        const result = await collections.ratings.insertOne(newRating);
-        const insertedId = result.insertedId;
+        // Přepočítat průměr hodnocení tohoto podniku
+        await placeService.updatePlaceAverageRating(db, placeId);
 
-        // 1. Zapsat id ratingu do pole ratingu na Place objektu
-        await collections.places.updateOne(
-            { _id: placeObjId },
-            { $push: { ratings: insertedId } }
-        );
-
-        // 2. Přepočítat průměr hodnocení tohoto podniku
-        await placeService.updatePlaceAverageRating(placeObjId);
-
-        // 3. Přidat rating do profilu Usera
-        await collections.users.updateOne(
-            { _id: userObjId },
-            { $push: { ratings: insertedId } }
-        );
-
-        return { ...newRating, _id: insertedId };
+        return { _id: newId, id: newId, placeId, userId, foodName: dto.foodName, score: dto.score, description: dto.description };
     }
 
-    async getRatingsForPlace(placeId: string) {
-        return await collections.ratings.aggregate([
-            { $match: { placeId: new ObjectId(placeId) } },
-            { 
-                $lookup: {
-                    from: "users",
-                    localField: "userId",
-                    foreignField: "_id",
-                    as: "author"
-                }
-            },
-            {
-                $unwind: { path: "$author", preserveNullAndEmptyArrays: true }
-            },
-            {
-                $addFields: { authorName: "$author.name" }
-            },
-            {
-                $project: { author: 0 }
-            }
-        ]).toArray();
+    async getRatingsForPlace(db: D1Database, placeId: string) {
+        // Získat i autora přes JOIN
+        const result = await db.prepare(`
+            SELECT r.*, u.name as authorName 
+            FROM ratings r
+            LEFT JOIN users u ON r.user_id = u.id
+            WHERE r.place_id = ?
+            ORDER BY r.created_at DESC
+        `).bind(String(placeId)).all();
+        
+        // Zpětná kompatibilita pro frontend s _id
+        return result.results.map(row => ({ ...row, _id: row.id }));
     }
 }
 
