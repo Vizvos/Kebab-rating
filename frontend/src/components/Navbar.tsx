@@ -3,7 +3,7 @@ import { useAuth } from '../contexts/AuthContext';
 import AuthDialog from './AuthDialog';
 
 export default function Navbar() {
-  const { user, logout } = useAuth();
+  const { user, dbUser, logout } = useAuth();
   const [showAuth, setShowAuth] = useState(false);
 
   return (
@@ -13,7 +13,7 @@ export default function Navbar() {
         <div>
           {user ? (
             <div className="nav-user" style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-              <span>Hi, {user.displayName || 'Kebab Hunter'}</span>
+              <span>Hi, {dbUser?.name || user.displayName || 'Kebab Hunter'}</span>
               <button onClick={logout}>Sign Out</button>
             </div>
           ) : (

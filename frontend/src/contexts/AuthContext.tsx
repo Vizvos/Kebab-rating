@@ -4,8 +4,15 @@ import type { User } from 'firebase/auth';
 import { auth } from '../firebase';
 import api from '../api/axios';
 
+export interface DbUser {
+  id: string;
+  name: string;
+  is_admin: boolean;
+}
+
 interface AuthContextType {
   user: User | null;
+  dbUser: DbUser | null;
   loading: boolean;
   login: () => Promise<void>;
   loginEmail: (email: string, pass: string) => Promise<void>;
@@ -18,11 +25,25 @@ const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
+  const [dbUser, setDbUser] = useState<DbUser | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
+      if (currentUser) {
+        try {
+          // Načteme skutečné údaje uživatele z naší tabulky `users`
+          const { data } = await api.get(`/users/${currentUser.uid}`);
+          if (data && data.user) {
+             setDbUser(data.user);
+          }
+        } catch (e) {
+          console.error("Failed to fetch DB user data", e);
+        }
+      } else {
+        setDbUser(null);
+      }
       setLoading(false);
     });
     return () => unsubscribe();
@@ -49,7 +70,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, login: async () => {}, loginEmail, registerEmail, logout }}>
+    <AuthContext.Provider value={{ user, dbUser, loading, login: async () => {}, loginEmail, registerEmail, logout }}>
       {!loading && children}
     </AuthContext.Provider>
   );

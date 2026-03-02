@@ -104,7 +104,7 @@ export default function MapView() {
 
   return (
     <div className="map-container">
-      <MapContainer center={[50.0755, 14.4378]} zoom={13} style={{ height: '100%', width: '100%' }}>
+      <MapContainer center={[49.195061, 16.606836]} zoom={13} style={{ height: '100%', width: '100%' }}>
         <TileLayer
           url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
           attribution='&copy; <a href="https://carto.com/">CARTO</a>'
