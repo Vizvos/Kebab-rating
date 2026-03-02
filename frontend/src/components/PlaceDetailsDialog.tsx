@@ -84,7 +84,7 @@ export default function PlaceDetailsDialog({ placeId, onClose, onRatingAdded, is
 
   return (
     <div className="dialog-overlay" onClick={(e) => { if(e.target === e.currentTarget) onClose(); }}>
-      <div className="dialog-box" style={{ width: '500px' }}>
+      <div className="dialog-box">
         <h2>{place.name} <span style={{color: 'white', fontWeight: 300}}>⭐ {place.rating}</span></h2>
         {place.address && <p>{place.address}</p>}
 
@@ -120,7 +120,7 @@ export default function PlaceDetailsDialog({ placeId, onClose, onRatingAdded, is
             
             <div className="form-group">
               <label>Skóre: <strong style={{color: '#fca311'}}>{score} / 10</strong></label>
-              <div style={{ display: 'flex', gap: '5px', fontSize: '24px', cursor: 'pointer', margin: '10px 0' }}>
+              <div className="stars-container">
                 {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(star => (
                    <span 
                      key={star} 

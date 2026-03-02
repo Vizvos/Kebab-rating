@@ -12,7 +12,7 @@ export default function Navbar() {
         <h1>Kebab Rating</h1>
         <div>
           {user ? (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+            <div className="nav-user" style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
               <span>Hi, {user.displayName || 'Kebab Hunter'}</span>
               <button onClick={logout}>Sign Out</button>
             </div>

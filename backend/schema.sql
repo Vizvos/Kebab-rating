@@ -20,13 +20,14 @@ CREATE TABLE IF NOT EXISTS places (
     FOREIGN KEY (creator_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
+DROP TABLE IF EXISTS ratings;
 -- Tabulka Hodnocení (Recenzí)
 CREATE TABLE IF NOT EXISTS ratings (
     id TEXT PRIMARY KEY,
     place_id TEXT NOT NULL,
     user_id TEXT NOT NULL,
     food_name TEXT,
-    score INTEGER NOT NULL CHECK(score >= 1 AND score <= 5),
+    score INTEGER NOT NULL CHECK(score >= 0 AND score <= 10),
     description TEXT,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (place_id) REFERENCES places(id) ON DELETE CASCADE,

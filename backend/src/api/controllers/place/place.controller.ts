@@ -62,8 +62,9 @@ app.post('/:id/ratings', requireAuth, validateDto(CreateRatingDto), async (c) =>
 
         const rating = await ratingService.createRating(c.env.DB, user.id || user._id, placeId, dto);
         return c.json({ message: 'Rating added', rating }, 201);
-    } catch (error) {
-        return c.json({ message: 'Error adding rating', error }, 500);
+    } catch (error: any) {
+        console.error("Error creating rating:", error.message || error);
+        return c.json({ message: 'Error adding rating', error: error.message || error }, 500);
     }
 });
 

@@ -233,3 +233,91 @@ html,
     opacity: 1;
   }
 }
+
+/* Floating Action Button */
+.fab-button {
+  position: absolute;
+  bottom: 30px;
+  right: 30px;
+  z-index: 1000;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: var(--primary-color);
+  color: #fff;
+  font-size: 36px;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s;
+}
+
+.fab-button:hover {
+  transform: scale(1.1);
+}
+
+.stars-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  font-size: 24px;
+  cursor: pointer;
+  margin: 10px 0;
+}
+
+/* RESPONSIVE DESIGN (MOBILE) */
+@media screen and (max-width: 768px) {
+  .navbar {
+    padding: 15px;
+    flex-direction: column;
+    gap: 10px;
+    background: rgba(20, 33, 61, 0.95);
+  }
+
+  .navbar h1 {
+    font-size: 1.5rem;
+  }
+
+  .nav-user {
+    flex-direction: column;
+    gap: 10px !important;
+  }
+
+  .nav-user span {
+    font-size: 0.9rem;
+  }
+
+  .dialog-box {
+    padding: 20px;
+    width: 90vw !important;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+
+  .dialog-buttons {
+    flex-direction: column-reverse;
+  }
+  
+  .dialog-buttons button {
+    width: 100%;
+    margin-top: 10px;
+  }
+
+  .fab-button {
+    bottom: 20px !important;
+    right: 20px !important;
+    width: 50px !important;
+    height: 50px !important;
+    font-size: 30px !important;
+  }
+
+  .stars-container {
+    gap: 2px !important;
+    font-size: 20px !important;
+  }
+}
+

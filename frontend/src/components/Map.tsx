@@ -160,30 +160,9 @@ export default function MapView() {
 
       {/* Floating Action Button (FAB) for adding new spot via Address */}
       <button 
+         className="fab-button"
          onClick={handleFabClick}
-         style={{
-             position: 'absolute',
-             bottom: '30px',
-             right: '30px',
-             zIndex: 1000,
-             width: '60px',
-             height: '60px',
-             borderRadius: '50%',
-             backgroundColor: '#fca311',
-             color: '#fff',
-             fontSize: '36px',
-             fontWeight: 'bold',
-             border: 'none',
-             cursor: 'pointer',
-             boxShadow: '0 4px 15px rgba(0,0,0,0.5)',
-             display: 'flex',
-             alignItems: 'center',
-             justifyContent: 'center',
-             transition: 'transform 0.2s',
-         }}
          title="Přidat přes vyhledání adresy"
-         onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.1)'}
-         onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
       >
           +
       </button>
