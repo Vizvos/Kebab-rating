@@ -10,16 +10,15 @@ export const requireAuth = async (c: Context, next: Next) => {
         return c.json({ message: 'Missing Authorization header' }, 401);
     }
 
-    // V zkušebním nebo local dev prostředí se dá toto částečně vypnout (podle env variable), ale pro produkci:
-    const AUTH_SERVICE_URL = (c.env as any)?.AUTH_SERVICE_URL || process.env.AUTH_SERVICE_URL;
+    const AUTH_SERVICE = (c.env as any)?.AUTH_SERVICE;
     
-    if (!AUTH_SERVICE_URL) {
-        console.error("AUTH_SERVICE_URL is missing in environment!");
+    if (!AUTH_SERVICE) {
+        console.error("AUTH_SERVICE binding is missing in environment!");
         return c.json({ message: 'Internal Server Error: Auth configuration missing' }, 500);
     }
 
     try {
-        const response = await fetch(`${AUTH_SERVICE_URL}/verify`, {
+        const response = await AUTH_SERVICE.fetch('https://auth/verify', {
             method: 'POST',
             headers: {
                 'Authorization': authHeader

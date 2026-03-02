@@ -5,8 +5,9 @@ compatibility_flags = ["nodejs_compat"]
 
 [vars]
 FRONTEND_URL = "https://kebab-rating.pages.dev"
-# Odkaz na tvůj nasazený auth worker service
-AUTH_SERVICE_URL = "https://auth.v-vizvary.workers.dev"
+[[services]]
+binding = "AUTH_SERVICE"
+service = "auth"
 
 [[d1_databases]]
 binding = "DB"

@@ -14,15 +14,14 @@ app.post('/register', validateDto(CreateUserDto), async (c) => {
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
         return c.json({ message: 'Missing Authorization header' }, 401);
     }
-    
-    const AUTH_SERVICE_URL = (c.env as any)?.AUTH_SERVICE_URL || process.env.AUTH_SERVICE_URL;
+    const AUTH_SERVICE = (c.env as any)?.AUTH_SERVICE;
 
-    if (!AUTH_SERVICE_URL) {
+    if (!AUTH_SERVICE) {
         return c.json({ message: 'Auth service configuration missing' }, 500);
     }
     
     try {
-        const response = await fetch(`${AUTH_SERVICE_URL}/verify`, {
+        const response = await AUTH_SERVICE.fetch('https://auth/verify', {
             method: 'POST',
             headers: {
                 'Authorization': authHeader
