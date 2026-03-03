@@ -12,7 +12,7 @@ import { useAuth } from '../contexts/AuthContext';
 
 // Fix pro chybějící ikony u Leaflet react wrapperu
 const customIcon = L.icon({
-  iconUrl: 'https://cdn-icons-png.flaticon.com/512/1046/1046774.png', // Food/restaurant icon
+  iconUrl: '/kebab-house-icon.png', // Food/restaurant icon
   iconSize: [38, 38],
   iconAnchor: [19, 38],
   popupAnchor: [0, -40]
